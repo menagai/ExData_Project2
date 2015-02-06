@@ -18,14 +18,18 @@
 ##                                                             ##
 ## date: 06/02/2015                                            ##
 #################################################################
+dir <- './/plots'
+if( !file.exists(dir))dir.create(dir)
 
 NEI <- readRDS('summarySCC_PM25.rds')
 NEI <- subset(NEI, fips == '24510')
 
-png('plot2.png')
-with( NEI, {
+tmp <- aggregate( x=list(Emissions = NEI$Emissions), by = list(year = NEI$year), FUN = mean)
+
+png(paste0(dir,'//plot2.png'))
+with( tmp, {
     par(bty = 'l')
-    plot( Emissions ~ year, col = rgb(0,0,0,0.7)
+    plot( Emissions ~ year, type = 'l'
        , ylab = expression(paste(PM[2.5], ' Emission (tons)'))
        , xlab = 'Year', main = expression( paste( PM[2.5],
            ' emission of Baltimore City over the years 1999 to 2008')))

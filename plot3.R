@@ -21,17 +21,25 @@
 ##                                                             ##
 ## date: 06/02/2015                                            ##
 #################################################################
-
-NEI <- readRDS('summarySCC_PM25.rds')
-NEI <- subset(NEI, fips == '24510')
+dir <- './/plots'
+if(!file.exists(dir))dir.create(dir)
 
 if(!is.element('ggplot2', installed.packages())){install.packages('ggplot2')}
 library('ggplot2')
 
-p <- ggplot(NEI, aes(year,Emissions))
-png('plot3.png', width = 960)
-p+geom_point()+facet_grid(.~type)+geom_smooth(method='lm')+theme_bw()+
+NEI <- readRDS('summarySCC_PM25.rds')
+NEI <- subset(NEI, fips == '24510')
+
+tmp <- aggregate(list( Emissions = NEI$Emissions), by = list( year = NEI$year, type = NEI$type), FUN = sum)
+                                                        
+p <- ggplot(tmp, aes(year,Emissions))
+png(paste0(dir,'//plot3.png'))
+p+geom_line(aes(color = type))+theme_minimal()+theme(axis.line = element_line(size = 0.5),
+                                                     plot.title= element_text(size = rel(0.9)))+
     labs(x = 'Years', y = expression(paste( PM[2.5], " emission (tons)"))
-       , title = expression( paste(PM[2.5], ' emission of Baltimore City over the years 1999 to 2008 for each type of source'
-                                   )))
+       , title = expression( paste(PM[2.5], ' emission of Baltimore City for each type of source (1999 to 2008)' )))
 dev.off()
+
+
+
+

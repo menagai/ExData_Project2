@@ -21,15 +21,21 @@
 ##                                                             ##
 ## date: 06/02/2015                                            ##
 #################################################################
+dir <- './/plots'
+if(!file.exists(dir))dir.create(dir)
 
 NEI <- readRDS('summarySCC_PM25.rds')
 
-png('./plot1.png')
-with(NEI, {
+tmp <- aggregate( x= list(emissions = NEI$Emissions)
+               , by = list(year = NEI$year), FUN = mean)
+
+png(paste0(dir,'//plot1.png'))
+with(tmp, {
     par(bty = 'l')
-    plot( Emissions ~ year, col = rgb(0,0,0,0.7)
+    plot( emissions~ year, type = 'l'
        , ylab = expression(paste(PM[2.5], ' Emission (tons)'))
        , xlab = 'Year', main = expression( paste( PM[2.5],
            ' emission from USA over the years 1999 to 2008')))
     })
 dev.off()
+
