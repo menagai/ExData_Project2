@@ -24,7 +24,7 @@ if( !file.exists(dir))dir.create(dir)
 NEI <- readRDS('summarySCC_PM25.rds')
 NEI <- subset(NEI, fips == '24510')
 
-tmp <- aggregate( x=list(Emissions = NEI$Emissions), by = list(year = NEI$year), FUN = mean)
+tmp <- aggregate( x=list(Emissions = NEI$Emissions), by = list(year = NEI$year), FUN = sum)
 
 png(paste0(dir,'//plot2.png'))
 with( tmp, {
